@@ -1,17 +1,81 @@
-import React from 'react';
-import { Nav, NavbarContainer, NavLogo, NavIcon } from './NavbarElements';
+import React, { useState, useEffect } from 'react';
+import { FaBars, FaTimes } from 'react-icons/fa';
+import { IconContext } from 'react-icons/lib';
+import { Button } from '../../globalStyles';
+import {
+  Nav,
+  NavbarContainer,
+  NavLogo,
+  NavIcon,
+  MobileIcon,
+  NavMenu,
+  NavItem,
+  NavLinks,
+  NavItemBtn,
+  NavBtnLink,
+} from './NavbarElements';
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [button, setButton] = useState(true);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const showButton = () => {
+    if (window.innerWidth <= 960) {
+      setButton(false);
+    } else {
+      setButton(true);
+    }
+  };
+
+  useEffect(() => {
+    showButton();
+  }, []);
+
+  window.addEventListener('resize', showButton);
+
   return (
     <>
-      <Nav>
-        <NavbarContainer>
-          <NavLogo to="/">
-            <NavIcon />
-            ULTRA
-          </NavLogo>
-        </NavbarContainer>
-      </Nav>
+      <IconContext.Provider value={{ color: '#fff' }}>
+        <Nav>
+          <NavbarContainer>
+            <NavLogo to="/">
+              <NavIcon />
+              ULTRA
+            </NavLogo>
+            <MobileIcon onClick={toggleMenu}>
+              {isOpen ? <FaTimes /> : <FaBars />}
+            </MobileIcon>
+            <NavMenu isOpen={isOpen} onClick={toggleMenu}>
+              <NavItem>
+                <NavLinks to="/">Home</NavLinks>
+              </NavItem>
+              <NavItem>
+                <NavLinks to="/services">Services</NavLinks>
+              </NavItem>
+              <NavItem>
+                <NavLinks to="/products">Products</NavLinks>
+              </NavItem>
+              <NavItemBtn>
+                {button ? (
+                  <NavBtnLink to="/sign-up">
+                    <Button primary>SIGN UP</Button>
+                  </NavBtnLink>
+                ) : (
+                  <NavBtnLink to="/sign-up">
+                    <Button fontBig primary>
+                      SIGN UP
+                    </Button>
+                  </NavBtnLink>
+                )}
+              </NavItemBtn>
+            </NavMenu>
+          </NavbarContainer>
+        </Nav>
+      </IconContext.Provider>
     </>
   );
 };
